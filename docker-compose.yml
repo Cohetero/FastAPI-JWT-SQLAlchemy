@@ -1,12 +1,26 @@
 version: '2'
 
 services:
+  fast-api:
+    build: .
+    command: uvicorn main:app --host 0.0.0.0 --port 5000 --reload
+    volumes:
+      - '.:/app'
+    ports:
+      - '5000:5000'
+    depends_on:
+      - postgres
+
   postgres:
     image: 'postgres:latest'
-    restart: always
     volumes:
       - './postgres_data:/var/lib/postgresql/data'
     environment:
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=secure_pass_here
+      - POSTGRES_DB=apiusers
     ports:
       - '5432:5432'
+
+volumes:
+  postgres_data:
