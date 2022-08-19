@@ -15,6 +15,11 @@ user_route = APIRouter(
     tags=["users"]
 )
 
+login_route = APIRouter (
+    prefix="/api",
+    tags=["login"]
+)
+
 @user_route.get('/user/', response_model=List[user_schema.User])
 def get_users():
     return session.query(User.id,
@@ -56,9 +61,8 @@ def delete_user(id: str):
     session.commit()
     return Response(status_code=HTTP_204_NO_CONTENT)
 
-@user_route.post(
+@login_route.post(
     '/login',
-    tags=["users"],
     response_model=Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     access_token = auth_service.generate_token(form_data.username, form_data.password)
