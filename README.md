@@ -264,3 +264,5 @@ Responses
 🟢 201  
 🔴 401  Error: Unauthorized
 ```
+Link de la colección de postman para probar la api
+https://www.getpostman.com/collections/ab27c9043f4b39535d42
