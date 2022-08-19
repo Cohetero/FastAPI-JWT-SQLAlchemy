@@ -21,6 +21,7 @@ JWT para tener una autenticacion del usuario por medio de un token que se genera
       <li> Ejecutar el proyecto</li>
     </ul>
   </details>
+- API
   
 ## Estructura del código
 ```
@@ -158,4 +159,108 @@ python3 main.py
 
 # Ejecutarlo con uvicorn
 uvicorn main:app --port 5000 --reload
+```
+## API
+*GET* http://127.0.0.1:5000/api/v1/user/  **Get Users** <br>
+Obtiene una lista de todos los usuarios que estan en la base
+```
+Parameters
+No parameters
+
+Responses
+🟢 200
+```
+
+*GET* http://127.0.0.1:5000/api/v1/user/{id}/ **Get User** <br>
+Solo obtine el usuario que tenga el id que se paso por la API
+```
+Parameters
+id
+
+Responses
+🟢 200
+🔴 422 Validation Error
+```
+
+
+*PUT* http://127.0.0.1:5000/api/v1/user/{id}/ **UPdate User** <br>
+Actualiza el username y el email del usuario
+```
+Parameters
+id
+
+Request body
+{
+  "email": "correo@email.com",
+  "username": "Username"
+}
+
+Responses
+🟢 200
+🔴 422 Validation Error
+```
+
+*POST* http://127.0.0.1:5000/api/v1/user/ **Create a new User** <br>
+Crea un nuevo usuario, valida si el email y username no esten registrados, si estan registrados manda un Response 400. Tambien valida el tamaño de email y password, si no esta dentro del rango manda un Response 422
+```
+Request body
+{
+  "email": "correo@email.com",
+  "username": "Username",
+  "password": "mypassword"
+}
+
+Responses
+🟢 201  Se creo bien el usuario
+🔴 400  Error: Bad Request      Si el email y/o username ya estan registrados
+🔴 422  Error: Unprocessable Entity     Si el password(35-64) o username(3-50) no cumple con el tamaño de caracteres 
+```
+
+*POST* http://127.0.0.1:5000/api/login/ **Login for access Token** <br>
+Api de login donde se inicia sesión a través del username o email con el password. Si esta bien los datos regresa un Response 200 con el token y el tipo de token. Si esta mas el username, email o password regresa un Response 401 indicando que esta mal uno de los datos
+```
+Request body
+username: "Username o Email",
+password: "mypassword"
+
+
+Responses
+🟢 200  Regresa el token y el tipo de token
+🔴 401  Error: Bad Request      Si el email y/o username ya estan registrados
+```
+
+*GET* http://127.0.0.1:5000/api/c1/task/ **Get Tasks** <br>
+Obtiene todas las tareas del usuario, el parametro is_done solo tiene true y false, true para traer las tareas que ya hizo, false para traer las qtareas que no ha realizado
+```
+Parameters
+is_done
+
+Responses
+🟢 200  
+🔴 401  Error: Unauthorized
+```
+
+
+*GET* http://127.0.0.1:5000/api/c1/task/{task_id} **Get Task** <br>
+Trae la tarea del id que se pasa
+```
+Parameters
+task_id
+
+Responses
+🟢 200  
+🔴 401  Error: Unauthorized
+```
+
+*POST* http://127.0.0.1:5000/api/v1/task/ **Create Task** <br>
+Se crea una tarea para el usuario que esta logeado
+```
+Request body
+{
+  "title": "My first task"
+}
+
+Responses
+🟢 201  
+🔴 401  Error: Unauthorized
 ```
